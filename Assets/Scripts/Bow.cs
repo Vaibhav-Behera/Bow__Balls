@@ -7,20 +7,25 @@ public class Bow : MonoBehaviour
     public KeyCode fireButton;
 
     public Transform spawn;
-    public Rigidbody arrowObj;
+    public GameObject arrowObj;
+   
 
-    Rigidbody arrow;
+    public GameObject arrow;
 
     float _charge;
 
     public float chargeMax;
     public float chargeRate;
+    
 
+    
+    [SerializeField] private GameObject ArrowContainer;
     
 
     void popup()
     {
-        arrow = Instantiate(arrowObj, spawn.position, transform.rotation * Quaternion.Euler(270, 180, 0)) as Rigidbody;
+       arrow = Instantiate(arrowObj, spawn.position, transform.rotation * Quaternion.Euler(270, 180, 0)) as GameObject;
+       arrow.transform.parent =  ArrowContainer.transform;
     }
 
     void Update()
@@ -28,24 +33,21 @@ public class Bow : MonoBehaviour
         if (Input.GetKeyDown(fireButton) )
         {
             popup();
-            arrow.useGravity=false;
+            arrow.GetComponent<Rigidbody>().useGravity = false;
         }
         if (Input.GetKey(fireButton) && _charge < chargeMax)
         {
             _charge += Time.fixedDeltaTime * chargeRate;
-            
-            //add gravity to the tip of the arrow
-            arrow.useGravity=false;
-            arrow.position += new Vector3(0, 0, 0.0099955f); 
-            // the charge rate will increase the force of the arrow
-            // the position will reflect how fast the arrow is moving backwards          
+            arrow.GetComponent<Rigidbody>().useGravity = false;
+            arrow.transform.position += new Vector3(0,0,0.0091955f);  
+
             Debug.Log(_charge.ToString());
         }
         if (Input.GetKeyUp(fireButton))
         {  
-            arrow.useGravity=true;
-            arrow.AddForce(spawn.forward * _charge, ForceMode.Impulse);
-            _charge = 0;
+           arrow.GetComponent<Rigidbody>().AddForce(spawn.forward * _charge, ForceMode.Impulse);
+           arrow.GetComponent<Rigidbody>().useGravity = true;
+           _charge = 0;
         }
     }
     
