@@ -18,5 +18,5 @@ public class RandomObjectSpawner : MonoBehaviour
             Instantiate(myObjects[randomIndex], randomSpawnPosition, Quaternion.identity);
             pool++;
         }
-    }
+    } 
 }

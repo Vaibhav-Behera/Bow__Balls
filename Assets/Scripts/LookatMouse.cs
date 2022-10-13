@@ -5,9 +5,9 @@ using UnityEngine;
 public class LookatMouse : MonoBehaviour
 {
     [SerializeField]
-    private Transform _bow;
+    private GameObject _bow;
     // Start is called before the first frame update
-   
+    public Bow script;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -18,8 +18,8 @@ public class LookatMouse : MonoBehaviour
         {
             if(hitinfo.collider != null)
             {
-                Vector3 direction = hitinfo.point - _bow.position;
-                _bow.rotation = Quaternion.LookRotation(direction);
+                Vector3 direction = hitinfo.point - script.arrow.transform.position;
+                script.arrow.transform.rotation = Quaternion.LookRotation(direction);
             }
         }
     }
