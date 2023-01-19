@@ -5,13 +5,14 @@ using UnityEngine;
 public class Crosshair : MonoBehaviour
 {
     // Start is called before the first frame update
-    private void Start()
+    void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     // Update is called once per frame
-    private void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {

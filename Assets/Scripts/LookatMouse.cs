@@ -5,10 +5,13 @@ using UnityEngine;
 public class LookatMouse : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _bow;
+    //private Transform arrowtip;
     // Start is called before the first frame update
-    public Bow script;
-
+    private Ok script;
+    public GameObject arrowtip;
+    private void Start() {
+        script = arrowtip.GetComponent<Ok>();
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -18,8 +21,7 @@ public class LookatMouse : MonoBehaviour
         {
             if(hitinfo.collider != null)
             {
-                Vector3 direction = hitinfo.point - script.arrow.transform.position;
-                script.arrow.transform.rotation = Quaternion.LookRotation(direction);
+            script.arrow.transform.rotation = Quaternion.LookRotation(hitinfo.point);
             }
         }
     }
