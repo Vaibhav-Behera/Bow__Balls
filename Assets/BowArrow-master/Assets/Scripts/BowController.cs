@@ -10,6 +10,7 @@ namespace BowArrow
         // the prefab to use as a projectile - needs to have an ArrowController.cs attached to it
         [SerializeField] private GameObject projectilePF = null;
         [SerializeField] private GameObject projectilePF2 = null;
+        [SerializeField] private GameObject projectilePF3 = null;
         // draw distance is measured from the grip to the string at max pull (make sure arrows are long enough)
         [SerializeField] private float maxDrawDistance = 0.74f;
         // the force required to fully draw the string
@@ -27,14 +28,10 @@ namespace BowArrow
         private float actualMaxDraw = 0;
         private float drawDistance = 0;
         private float drawRate = 0;
+        public static int arrowcount = 0;
 
-        public GameObject[] myObjects;//new stuff
-        //private List<Action> functionList = new List<Action>();
-
-        // Start is called before the first frame update
         void Start()
         {
-            //functionList.Add(SpawnProjectile);
             actualMaxDraw = maxDrawDistance - braceHeight;
             spawnPoint = transform.Find("DrawPoint").gameObject;
             SpawnProjectile();
@@ -42,7 +39,17 @@ namespace BowArrow
             readyToFire = true;
         }
 
-        // Update is called once per frame
+        void OnCollisionEnter(Collision collision)
+        {
+        //Check for a match with the specified name on any GameObject that collides with your GameObject
+        if (collision.gameObject.tag == "Red_Ball" || collision.gameObject.tag == "Yellow_Ball" || collision.gameObject.tag == "Green_Ball")
+        {
+            //Add game over script
+            Application.Quit();
+            Debug.Log("Working");
+        }
+        }
+
         void Update()
         {
             if (Input.GetMouseButton(0) && readyToFire && drawDistance < actualMaxDraw)
@@ -63,7 +70,22 @@ namespace BowArrow
                 drawDistance = 0;
                 UpdateDrawPoint(drawDistance);
             }
+            else if (Input.GetMouseButtonDown(1) && readyToFire)
+            {
+                DestroyProjectile();
+            }
         }
+
+        void DestroyProjectile()
+        {
+            if (projectileController != null)
+            {
+            Destroy(projectileController.gameObject);
+            projectileController = null;
+            SpawnProjectile();
+            }
+        }
+
 
         IEnumerator ReloadTimer()
         {
@@ -80,24 +102,16 @@ namespace BowArrow
             spawnPoint.transform.localPosition = new Vector3(0, 0, z);
         }
 
-        void SpawnProjectile()
-        {
-            int randomnumber = UnityEngine.Random.Range(1,3);
-            if(randomnumber == 1)
+            void SpawnProjectile()
             {
-            GameObject projectile = Instantiate(projectilePF, spawnPoint.transform); 
-            projectileController = projectile.GetComponent<ArrowController>();
-            float length = projectileController.Length;
-            projectile.transform.position = projectile.transform.position + transform.forward * length / 2;
+              arrowcount++;
+              int randomnumber = UnityEngine.Random.Range(0, 3);
+              GameObject[] projectiles = new GameObject[] { projectilePF, projectilePF2, projectilePF3 };
+              GameObject projectile = Instantiate(projectiles[randomnumber], spawnPoint.transform); 
+              projectileController = projectile.GetComponent<ArrowController>();
+              float length = projectileController.Length;
+              projectile.transform.position = projectile.transform.position + transform.forward * length / 2;
             }
-            if(randomnumber == 2)
-            {
-            GameObject projectile = Instantiate(projectilePF2, spawnPoint.transform); 
-            projectileController = projectile.GetComponent<ArrowController>();
-            float length = projectileController.Length;
-            projectile.transform.position = projectile.transform.position + transform.forward * length / 2;
-            }
-        }
 
         
 
@@ -109,6 +123,8 @@ namespace BowArrow
             float vel = Mathf.Sqrt(2 * energy / mass);
             projectileController.Launch(vel);
         }
+
+        
 
     }
 }

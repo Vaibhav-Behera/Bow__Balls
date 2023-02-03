@@ -4,29 +4,30 @@ using UnityEngine;
 
 namespace BowArrow
 {
-
     public class ArrowController : MonoBehaviour
     {
-
         [SerializeField] private float length = 0.7f;
         [SerializeField] private float cd = 1.8f;
 
         private Rigidbody rB;
         private float tempDragCalc;
         private float dragOffset;
+        private MeshRenderer meshRenderer;
 
         public Rigidbody RB { get => rB; }
         public float Length { get => length; }
-
 
         void Start()
         {
             const float csa = 0.00015f;
             rB = GetComponent<Rigidbody>();
             tempDragCalc = 1.292f * csa * 0.5f * cd;
-            // distance behind the CoG for the application of drag, 40% of length works well
             dragOffset = length * 0.4f;
+            // meshRenderer = GetComponent<MeshRenderer>();
+            // meshRenderer.material.color = Color.red;
         }
+
+
 
         void FixedUpdate()
         {
