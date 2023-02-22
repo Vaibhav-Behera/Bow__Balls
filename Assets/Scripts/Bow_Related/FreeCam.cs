@@ -26,6 +26,7 @@ namespace BowArrow
             // dash
             if (Input.GetKeyDown(KeyCode.Space) && !isDashing)
             {
+                FindObjectOfType<AudioManager>().Play("Dash");
                 isDashing = true;
                 dashTimer = 0.0f;
             }

@@ -7,6 +7,8 @@ namespace BowArrow
 
     public class BowController : MonoBehaviour
     {
+        public GameObject hitsomethingui;
+        public GameObject Canvas_2;
         // the prefab to use as a projectile - needs to have an ArrowController.cs attached to it
         [SerializeField] private GameObject projectilePF = null;
         [SerializeField] private GameObject projectilePF2 = null;
@@ -39,15 +41,18 @@ namespace BowArrow
             readyToFire = true;
         }
 
-        void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter()
         {
+            Debug.Log("I hit somehting");
+            hitsomethingui.SetActive(true);
+            Canvas_2.SetActive(false);
+            Time.timeScale = 0f;
         //Check for a match with the specified name on any GameObject that collides with your GameObject
-        if (collision.gameObject.tag == "Red_Ball" || collision.gameObject.tag == "Yellow_Ball" || collision.gameObject.tag == "Green_Ball")
-        {
-            //Add game over script
-            Application.Quit();
-            Debug.Log("Working");
-        }
+        // if (collision.gameObject.tag == "Wall")
+        // {
+        //     Destroy(this.gameObject);
+        //     Debug.Log("Working");
+        // }
         }
 
         void Update()
@@ -56,6 +61,12 @@ namespace BowArrow
             {
                 drawDistance += drawRate * Time.deltaTime;
                 UpdateDrawPoint(drawDistance);
+            if (drawDistance >= actualMaxDraw)
+            {
+                FindObjectOfType<AudioManager>().Play("BowLoading");
+                readyToFire = true;
+            }
+
             }
             else if (Input.GetMouseButtonUp(0) && drawDistance > 0.05f)
             {
@@ -72,19 +83,35 @@ namespace BowArrow
             }
             else if (Input.GetMouseButtonDown(1) && readyToFire)
             {
+                FindObjectOfType<AudioManager>().Play("ChangeArrow");
                 DestroyProjectile();
             }
         }
 
         void DestroyProjectile()
         {
-            if (projectileController != null)
+            if (projectileController != null )
             {
             Destroy(projectileController.gameObject);
             projectileController = null;
             SpawnProjectile();
             }
         }
+
+    // void DestroyProjectile()
+    // {
+    // if (projectileController != null)
+    // {
+    //     if (!projectileController.hasMoved && projectileController.transform.position == projectileController.initialPosition)
+    //     {
+    //         // Arrow has not moved from its initial position and has been destroyed, respawn projectile
+    //         SpawnProjectile();
+    //     }
+
+    //     // Destroy the current arrow
+    //     Destroy(projectileController.gameObject);
+    //     projectileController = null;
+    // }
 
 
         IEnumerator ReloadTimer()
@@ -117,6 +144,7 @@ namespace BowArrow
 
         void FireProjectile()
         {
+            FindObjectOfType<AudioManager>().Play("ArrowRelease");
             float fractionOfMax = drawDistance / actualMaxDraw;
             float energy = 0.5f * drawDistance * maxDrawForce * fractionOfMax;
             float mass = projectileController.RB.mass;

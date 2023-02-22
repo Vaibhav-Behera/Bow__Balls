@@ -7,6 +7,7 @@ TagManager:
   - Green_Ball
   - Red_Ball
   - Yellow_Ball
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -15,8 +16,8 @@ TagManager:
   - Water
   - UI
   - Crosshair
-  - 
-  - 
+  - UI2
+  - Wall
   - 
   - 
   - 

@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 public class TimeLeft : MonoBehaviour
 {
-    [SerializeField] public float timerDuration = 5.0f;
-    private float timerStartTime;
+    [SerializeField] public float timerDuration = 10f;
+    private float timerStartTime = 1f;
     private Text timerText;
-    public static float remainingTime;
+    public static float remainingTime = 1f;
 
     private void Start()
     {
-        timerStartTime = Time.time;
+        timerStartTime = Time.time + 1f;
         timerText = GetComponent<Text>();
     }
 
@@ -23,9 +23,13 @@ public class TimeLeft : MonoBehaviour
 
         if (remainingTime <= 0)
         {
-            timerText.text = "0.00";
+            timerText.text = " 0";
             // Timer has elapsed, do something
         }
+    }
+    public void ResetTimer()
+    {
+        timerStartTime = Time.time + 1f;
     }
 }
 
